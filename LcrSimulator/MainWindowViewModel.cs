@@ -24,10 +24,7 @@ namespace LcrSimulator
             get { return _playersCount; }
             set
             {
-                if (_playersCount == value)
-                    return;
-
-                _playersCount = value;
+                SetProperty(ref _playersCount, value);
                 OnPropertyChanged(new PropertyChangedEventArgs("PlayersCount"));
             }
         }
