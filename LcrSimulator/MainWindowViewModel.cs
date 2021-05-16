@@ -2,6 +2,7 @@
 using LcrSimulator.Model;
 using Prism.Mvvm;
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 
@@ -13,8 +14,6 @@ namespace LcrSimulator
         {
             LcrGame = lcrGame;
             PlayGameCommand = new RelayCommand(param => PlayGameCommandHandler(), param => CanExecutePlayGame());
-
-            PropertyChanged += MainWindowViewModel_PropertyChanged;
         }
 
         public LcrGame LcrGame { get; set; }
@@ -29,7 +28,7 @@ namespace LcrSimulator
                     return;
 
                 _playersCount = value;
-                RaisePropertyChanged();
+                OnPropertyChanged(new PropertyChangedEventArgs("PlayersCount"));
             }
         }
 
@@ -39,11 +38,8 @@ namespace LcrSimulator
             get { return _gamesCount; }
             set
             {
-                if (_gamesCount == value)
-                    return;
-
-                _gamesCount = value;
-                RaisePropertyChanged();
+                SetProperty(ref _gamesCount, value);
+                OnPropertyChanged(new PropertyChangedEventArgs("GamesCount"));                
             }
         }
 
@@ -53,10 +49,7 @@ namespace LcrSimulator
             get { return _minTurns; }
             set
             {
-                if (_minTurns == value)
-                    return;
-
-                _minTurns = value;
+                SetProperty(ref _minTurns, value);
                 RaisePropertyChanged();
             }
         }
@@ -67,10 +60,7 @@ namespace LcrSimulator
             get { return _maxTurns; }
             set
             {
-                if (_maxTurns == value)
-                    return;
-
-                _maxTurns = value;
+                SetProperty(ref _maxTurns, value);
                 RaisePropertyChanged();
             }
         }
@@ -81,33 +71,38 @@ namespace LcrSimulator
             get { return _avgTurns; }
             set
             {
-                if (_avgTurns == value)
-                    return;
-
-                _avgTurns = value;
+                SetProperty(ref _avgTurns, value);
                 RaisePropertyChanged();
             }
         }
 
-        private void MainWindowViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        protected override void OnPropertyChanged(PropertyChangedEventArgs args)
         {
-            if (e.PropertyName == "PlayersCount" || e.PropertyName == "GamesCount")
-                CanExecutePlayGame();
-        }
+            base.OnPropertyChanged(args);
 
+            switch (args.PropertyName) {
+                case "PlayersCount":
+                case "GamesCount":
+                    CanExecutePlayGame();
+                    break;
+                default:
+                    break;
+            }
+        }
 
         #region PlayGameCommand
         public ICommand PlayGameCommand { get; private set; }
 
         private bool CanExecutePlayGame()
         {
-            //Actual project shoulld use message service to validate 
-            //and popup message if failed to meet minmum PlayersCount or GamesCount
+            //Actual project shoulld implement IDataErrorInfo to validate 
+            //and popup tooltip if failed to meet minmum value
             return PlayersCount > 2 && GamesCount > 2;
         }
 
         private void PlayGameCommandHandler()
         {
+            MinTurns = 0;
             LcrGame.GamesCount = GamesCount.GetValueOrDefault();
 
             LcrGame.PlayersCount = PlayersCount.GetValueOrDefault();
