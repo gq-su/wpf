@@ -16,6 +16,7 @@ namespace LcrSimulator
     {
         public App()
         {
+            Properties["Dices"] = new Dices();
             new MainWindow { DataContext = new MainWindowViewModel(new LcrGame()) }.Show();
         }
     }
