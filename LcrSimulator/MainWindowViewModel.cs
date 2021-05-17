@@ -4,6 +4,7 @@ using Prism.Mvvm;
 using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace LcrSimulator
@@ -13,7 +14,7 @@ namespace LcrSimulator
         public MainWindowViewModel(LcrGame lcrGame)
         {
             LcrGame = lcrGame;
-            PlayGameCommand = new RelayCommand(param => PlayGameCommandHandler(), param => CanExecutePlayGame());
+            PlayGameCommand = new RelayCommand(async param => await PlayGameCommandHandlerAsync(), param => CanExecutePlayGame());
         }
 
         public LcrGame LcrGame { get; set; }
@@ -36,7 +37,7 @@ namespace LcrSimulator
             set
             {
                 SetProperty(ref _gamesCount, value);
-                OnPropertyChanged(new PropertyChangedEventArgs("GamesCount"));                
+                OnPropertyChanged(new PropertyChangedEventArgs("GamesCount"));
             }
         }
 
@@ -77,7 +78,8 @@ namespace LcrSimulator
         {
             base.OnPropertyChanged(args);
 
-            switch (args.PropertyName) {
+            switch (args.PropertyName)
+            {
                 case "PlayersCount":
                 case "GamesCount":
                     CanExecutePlayGame();
@@ -92,30 +94,35 @@ namespace LcrSimulator
 
         private bool CanExecutePlayGame()
         {
-            //Actual project shoulld implement IDataErrorInfo to validate 
-            //and popup tooltip if failed to meet minmum value
             return PlayersCount > 2 && GamesCount > 2;
         }
 
-        private void PlayGameCommandHandler()
+        private async Task PlayGameCommandHandlerAsync()
         {
-            MinTurns = 0;
+            MinTurns = MaxTurns = AvgTurns = 0;
+
             LcrGame.GamesCount = GamesCount;
             LcrGame.PlayersCount = PlayersCount;
 
             if (LcrGame.Games.Any())
                 LcrGame.Games.Clear();
 
+            await Task.Run(() => PlayGame());
+
+            MinTurns = LcrGame.Games.Min(o => o.TurnsCount);
+            MaxTurns = LcrGame.Games.Max(o => o.TurnsCount);
+            AvgTurns = (int)Math.Round(LcrGame.Games.Average(o => o.TurnsCount), 0);
+
+        }
+
+        private void PlayGame()
+        {
             for (int i = 0; i < LcrGame.GamesCount; i++)
             {
                 var game = new Game(LcrGame.PlayersCount);
                 game.PlayGame();
                 LcrGame.Games.Add(game);
             }
-
-            MinTurns = LcrGame.Games.Min(o => o.TurnsCount);
-            MaxTurns = LcrGame.Games.Max(o => o.TurnsCount);
-            AvgTurns = (int)Math.Round(LcrGame.Games.Average(o => o.TurnsCount), 0);
         }
         #endregion
 
