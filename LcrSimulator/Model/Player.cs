@@ -2,22 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace LcrSimulator.Model
 {
     public class Player : BindableBase
     {
-        const int MaxDiceCount = 3;
-
+        public readonly Dices Dices;
         public Player()
         {
-            _chipsCount = MaxDiceCount;
-
-            for(int i = 0; i < MaxDiceCount; i++)
-            {
-                var dice = new Dice { Index = i };
-                Dices.Add(dice);
-            }
+            Dices = Application.Current.Properties["Dices"] as Dices;
+            _chipsCount = Dices.MaxDiceCount;
         }
 
         public int Index { get; set; }
@@ -28,64 +24,26 @@ namespace LcrSimulator.Model
             get { return _chipsCount; }
             set
             {
-                if (_chipsCount == value) return;
+                if (_chipsCount == value)
+                    return;
 
-                var oldCount = _chipsCount;
                 _chipsCount = value < 0 ? 0 : value;
-
-                AdjustDiceList(oldCount, _chipsCount);
             }
         }
 
-        public List<Dice> Dices { get; private set; } = new List<Dice>();
 
         public void Play()
         {
-            if (Dices.Count < 1)
-                return;
-            
-            Dices.ForEach((dice) => dice.Roll(Index));
+            var playDiceCount = ChipsCount > Dices.MaxDiceCount ? Dices.MaxDiceCount : ChipsCount;
+
+            Dices.ForEach(o => o.IsActive = false);
+
+            for(int i = 0; i < playDiceCount; i++)
+            {
+                Dices[i].Roll(this.Index);
+            }
 
             RaisePropertyChanged("Played");
-        }
-
-        private void RemoveDice()
-        {
-            if (Dices.Any())
-                Dices.RemoveAt(Dices.Count - 1);
-        }
-
-        private void AddDice()
-        {
-            if (Dices.Count >= MaxDiceCount)
-                return;
-
-            Dices.Add(new Dice{ Index = Dices.Count });
-        }
-
-        private void AdjustDiceList(int oldChipsCount, int newChipsCount)
-        {
-            bool removeDice = false;
-            int countChange;
-            if (newChipsCount>oldChipsCount)
-               countChange = newChipsCount - oldChipsCount;
-            else
-            {
-                if (oldChipsCount > MaxDiceCount)
-                    countChange = MaxDiceCount - newChipsCount;
-                else
-                    countChange = oldChipsCount - newChipsCount;
-
-                removeDice = true;
-            }
-
-            for (int i = 0; i < Math.Abs(countChange); i++)
-            {
-                if (removeDice)
-                    RemoveDice();
-                else
-                    AddDice(); 
-            }
         }
     }
 }

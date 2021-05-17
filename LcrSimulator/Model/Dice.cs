@@ -1,23 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LcrSimulator.Model
 {
     public class Dice
     {
-        public string[] DiceFaces { get; private set; } = new string[] { "L", "D", "C", "D", "R", "D" };
-
-        public string DiceFace { get; set; }
+        public char[] DiceFaces { get; private set; } = new char[] { 'L', 'D', 'C', 'D', 'R', 'D' };
 
         public int Index { get; set; }
+
+        public char DiceFace { get; set; }
+
+        /// <summary>
+        /// Indicates is used in game when its value is true
+        /// </summary>
+        public bool IsActive { get; set; }
 
         public void Roll(int playerIndex)
         {
             var rand = new Random(Environment.TickCount + playerIndex+Index);
             DiceFace = DiceFaces[rand.Next(0, DiceFaces.Length)];
+            IsActive = true;
         }
     }
 }
