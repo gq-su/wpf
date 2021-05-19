@@ -3,6 +3,7 @@ using LcrSimulator.Model;
 using Prism.Mvvm;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -119,7 +120,7 @@ namespace LcrSimulator
         {
             for (int i = 0; i < LcrGame.GamesCount; i++)
             {
-                var game = new Game(LcrGame.PlayersCount);
+                var game = new Game(LcrGame.PlayersCount) { Index = i };
                 game.PlayGame();
                 LcrGame.Games.Add(game);
             }

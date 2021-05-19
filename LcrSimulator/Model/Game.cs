@@ -7,11 +7,15 @@ namespace LcrSimulator.Model
 {
     public class Game : BindableBase
     {
-        private List<Player> _players;
+        private readonly List<Player> _players;
 
-        public Game(int playersCount)
+        public Game()
         {
             _players = new List<Player>();
+        }
+
+        public Game(int playersCount) : this()
+        {
             for (int i = 0; i < playersCount; i++)
             {
                 var player = new Player
@@ -33,7 +37,8 @@ namespace LcrSimulator.Model
             }
         }
 
-        //takes how many rounds to win
+        public int Index { get; set; }
+
         public int TurnsCount { get; set; } = 0;
 
         public bool GameOver { get; set; }
@@ -42,7 +47,11 @@ namespace LcrSimulator.Model
         {
             do
             {
-                _players.ForEach((player) => player.Play());
+                _players.ForEach((player) =>
+                {
+                    if (!GameOver)
+                        player.Play(Index + TurnsCount);
+                });
 
             } while (!GameOver);
         }
@@ -52,9 +61,6 @@ namespace LcrSimulator.Model
             TurnsCount += 1;
             var dices = currPlayer.Dices.FindAll(o => o.IsActive);
 
-            if (dices.Any(dice => dice.DiceFace == 'D'))
-                return;
-
             if (dices.Any(o => o.DiceFace == 'L'))
             {
                 var prevPlayerIndex = currPlayer.Index - 1;
@@ -62,7 +68,14 @@ namespace LcrSimulator.Model
                 var prevPlayer = _players.ElementAt(prevPlayerIndex);
 
                 var lCount = dices.FindAll(o => o.DiceFace == 'L').Count;
+                currPlayer.ChipsCount -= lCount;
                 prevPlayer.ChipsCount += lCount;
+            }
+
+            if (dices.Any(o => o.DiceFace == 'C'))
+            {
+                var cCount = dices.FindAll(o => o.DiceFace == 'C').Count;
+                currPlayer.ChipsCount -= cCount;
             }
 
             if (dices.Any(o => o.DiceFace == 'R'))
@@ -71,11 +84,10 @@ namespace LcrSimulator.Model
                 nextPlayerIndex = nextPlayerIndex % _players.Count;
                 var nextPlayer = _players.ElementAt(nextPlayerIndex);
 
-                var lCount = dices.FindAll(o => o.DiceFace == 'R').Count;
-                nextPlayer.ChipsCount += lCount;
+                var rCount = dices.FindAll(o => o.DiceFace == 'R').Count;
+                currPlayer.ChipsCount -= rCount;
+                nextPlayer.ChipsCount += rCount;
             }
-
-            currPlayer.ChipsCount -= dices.FindAll(o => o.DiceFace != 'D').Count;
 
             GameOver = _players.FindAll(o => o.ChipsCount > 0).Count == 1;
         }

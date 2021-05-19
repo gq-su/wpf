@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -31,19 +32,21 @@ namespace LcrSimulator.Model
             }
         }
 
-
-        public void Play()
+        public void Play(int seed)
         {
+            if (ChipsCount <= 0) return;
+
             var playDiceCount = ChipsCount > Dices.MaxDiceCount ? Dices.MaxDiceCount : ChipsCount;
 
             Dices.ForEach(o => o.IsActive = false);
 
-            for(int i = 0; i < playDiceCount; i++)
+            for (int i = 0; i < playDiceCount; i++)
             {
-                Dices[i].Roll(this.Index);
+                Dices[i].Roll(Index + seed);
             }
 
             RaisePropertyChanged("Played");
+            //Thread.Sleep(100);
         }
     }
 }

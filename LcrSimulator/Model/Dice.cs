@@ -15,9 +15,9 @@ namespace LcrSimulator.Model
         /// </summary>
         public bool IsActive { get; set; }
 
-        public void Roll(int playerIndex)
+        public void Roll(int seed)
         {
-            var rand = new Random(Environment.TickCount + playerIndex+Index);
+            var rand = new Random(Environment.TickCount + seed + Index);
             DiceFace = DiceFaces[rand.Next(0, DiceFaces.Length)];
             IsActive = true;
         }
