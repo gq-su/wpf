@@ -62,12 +62,12 @@
                        HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10" />
             <TextBox Grid.Column="1" 
                      Text="{Binding PlayersCount, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=true, NotifyOnValidationError=true}" 
-                     Height="30" TextAlignment="Center" VerticalAlignment="Center" />
+                     Height="30" VerticalContentAlignment="Center" VerticalAlignment="Center" />
             
             <TextBlock Grid.Column="2" Text="Number of games:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10" />
             <TextBox Grid.Column="3"
                      Text="{Binding GamesCount, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=true, NotifyOnValidationError=true}"
-                     Height="30" TextAlignment="Center" VerticalAlignment="Center" />
+                     Height="30" VerticalContentAlignment="Center" VerticalAlignment="Center" />
 
             <TextBlock Grid.Row="1" Text="Minimum turns for a game to win out:" Margin="10"
                        HorizontalAlignment="Right" VerticalAlignment="Center" />
