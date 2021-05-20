@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="LCR Simulator" Height="450" Width="950" MinHeight="450" MinWidth="950">
+        Title="{Binding Title}" Height="450" Width="950" MinHeight="450" MinWidth="950">
     
     <Window.Resources>
         <Style TargetType="{x:Type Label}">
@@ -41,7 +41,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <TextBlock Text="LCR Simulator" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20" />
+        <TextBlock Text="{Binding Title}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20" />
         
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>

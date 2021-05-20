@@ -1,12 +1,10 @@
-﻿using LcrSimulator.Commands;
-using LcrSimulator.Model;
+﻿using LcrSimulator.Model;
+using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace LcrSimulator
 {
@@ -15,10 +13,17 @@ namespace LcrSimulator
         public MainWindowViewModel(LcrGame lcrGame)
         {
             LcrGame = lcrGame;
-            PlayGameCommand = new RelayCommand(async param => await PlayGameCommandHandlerAsync(), param => CanExecutePlayGame());
+            PlayGameCommand = new DelegateCommand(PlayGameCommandHandlerAsync, CanExecutePlayGame);
         }
 
         public LcrGame LcrGame { get; set; }
+
+        private string _title = "LCR Game Simulator";
+        public string Title
+        {
+            get { return _title; }
+            set { SetProperty(ref _title, value); }
+        }
 
         private int _playersCount = 3;
         public int PlayersCount
@@ -91,14 +96,14 @@ namespace LcrSimulator
         }
 
         #region PlayGameCommand
-        public ICommand PlayGameCommand { get; private set; }
+        public DelegateCommand PlayGameCommand { get; private set; }
 
         private bool CanExecutePlayGame()
         {
             return PlayersCount > 2 && GamesCount > 2;
         }
 
-        private async Task PlayGameCommandHandlerAsync()
+        private async void PlayGameCommandHandlerAsync()
         {
             MinTurns = MaxTurns = 0;
             AvgTurns = 0.0;
@@ -114,7 +119,6 @@ namespace LcrSimulator
             MinTurns = LcrGame.Games.Min(o => o.TurnsCount);
             MaxTurns = LcrGame.Games.Max(o => o.TurnsCount);
             AvgTurns = Math.Round(LcrGame.Games.Average(o => o.TurnsCount), 1);
-
         }
 
         private void PlayGame()
