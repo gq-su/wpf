@@ -46,7 +46,6 @@ namespace LcrSimulator.Model
             }
 
             RaisePropertyChanged("Played");
-            //Thread.Sleep(100);
         }
     }
 }

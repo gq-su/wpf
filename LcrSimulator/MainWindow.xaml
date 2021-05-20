@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="LCR Simulator" Height="450" Width="800" MinHeight="450" MinWidth="800">
+        Title="LCR Simulator" Height="450" Width="950" MinHeight="450" MinWidth="950">
     
     <Window.Resources>
         <Style TargetType="{x:Type Label}">
@@ -48,6 +48,8 @@
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -56,28 +58,33 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Text="Number of players:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10" />
+            <TextBlock Grid.Column="0" Text="Number of players:" 
+                       HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10" />
             <TextBox Grid.Column="1" 
                      Text="{Binding PlayersCount, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=true, NotifyOnValidationError=true}" 
-                     VerticalAlignment="Center" />
+                     Height="30" TextAlignment="Center" VerticalAlignment="Center" />
+            
             <TextBlock Grid.Column="2" Text="Number of games:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10" />
             <TextBox Grid.Column="3"
                      Text="{Binding GamesCount, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=true, NotifyOnValidationError=true}"
-                     VerticalAlignment="Center" />
-            <StackPanel Grid.Row="1" Orientation="Horizontal">
-                <TextBlock Text="Min turns:" Margin="10" VerticalAlignment="Center"/>
-                <TextBlock Text="{Binding MinTurns}" VerticalAlignment="Center" Background="LightBlue" />
-            </StackPanel>
-            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" >
-                <TextBlock Text="Max turns:" Margin="10" VerticalAlignment="Center"/>
-                <TextBlock Text="{Binding MaxTurns}" VerticalAlignment="Center" Background="LightBlue" />
-            </StackPanel>
-            <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" >
-                <TextBlock Text="Average turns:" Margin="10" VerticalAlignment="Center"/>
-                <TextBlock Text="{Binding AvgTurns}" VerticalAlignment="Center" Background="LightBlue" />
-            </StackPanel>
+                     Height="30" TextAlignment="Center" VerticalAlignment="Center" />
 
-            <Button Grid.Row="2" Grid.Column="3" Content="Start Game" Command="{Binding PlayGameCommand}"
+            <TextBlock Grid.Row="1" Text="Minimum turns for a game to win out:" Margin="10"
+                       HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding MinTurns}" 
+                       HorizontalAlignment="Left"  VerticalAlignment="Center" Background="LightBlue" />
+
+            <TextBlock Grid.Row="2" Text="Maximum turns for a game to win out:"
+                       Margin="10" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MaxTurns}"
+                       HorizontalAlignment="Left" VerticalAlignment="Center" Background="LightBlue" />
+
+            <TextBlock Grid.Row="3" Text="Average turns:"
+                       Margin="10" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding AvgTurns}"
+                       HorizontalAlignment="Left" VerticalAlignment="Center" Background="LightBlue" />
+
+            <Button Grid.Row="4" Grid.Column="3" Content="Start Game" Command="{Binding PlayGameCommand}"
                     ToolTip="Please enter players count and games count to start game"
                     ToolTipService.ShowOnDisabled="True">
             </Button>

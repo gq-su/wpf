@@ -64,8 +64,8 @@ namespace LcrSimulator
             }
         }
 
-        private int _avgTurns;
-        public int AvgTurns
+        private double _avgTurns;
+        public double AvgTurns
         {
             get { return _avgTurns; }
             set
@@ -100,7 +100,8 @@ namespace LcrSimulator
 
         private async Task PlayGameCommandHandlerAsync()
         {
-            MinTurns = MaxTurns = AvgTurns = 0;
+            MinTurns = MaxTurns = 0;
+            AvgTurns = 0.0;
 
             LcrGame.GamesCount = GamesCount;
             LcrGame.PlayersCount = PlayersCount;
@@ -112,7 +113,7 @@ namespace LcrSimulator
 
             MinTurns = LcrGame.Games.Min(o => o.TurnsCount);
             MaxTurns = LcrGame.Games.Max(o => o.TurnsCount);
-            AvgTurns = (int)Math.Round(LcrGame.Games.Average(o => o.TurnsCount), 0);
+            AvgTurns = Math.Round(LcrGame.Games.Average(o => o.TurnsCount), 1);
 
         }
 
