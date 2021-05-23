@@ -4,13 +4,13 @@ namespace LcrSimulator.Model
 {
     public class LcrGame
     {
-        public LcrGame()
-        {
-        }
+        public LcrGame() { }
 
         public const int MinPlayersCount = 3;
 
         public const int MinGamesCount = 3;
+
+        public const int InitialChipsCount = 3;
 
         public int PlayersCount { get; set; }
 

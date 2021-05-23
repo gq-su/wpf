@@ -10,7 +10,7 @@ namespace LcrSimulator.Model
         {
             for (int i = 0; i < MaxDiceCount; i++)
             {
-                Add(new Dice { Index = i * 100 });
+                Add(new Dice());
             }
         }
     }

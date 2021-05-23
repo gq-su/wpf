@@ -25,7 +25,7 @@ namespace LcrSimulator
             set { SetProperty(ref _title, value); }
         }
 
-        private int _playersCount = 3;
+        private int _playersCount = LcrGame.MinPlayersCount;
         public int PlayersCount
         {
             get { return _playersCount; }
@@ -36,7 +36,7 @@ namespace LcrSimulator
             }
         }
 
-        private int _gamesCount = 3;
+        private int _gamesCount = LcrGame.MinGamesCount;
         public int GamesCount
         {
             get { return _gamesCount; }
@@ -51,33 +51,21 @@ namespace LcrSimulator
         public int MinTurns
         {
             get { return _minTurns; }
-            set
-            {
-                SetProperty(ref _minTurns, value);
-                RaisePropertyChanged();
-            }
+            set { SetProperty(ref _minTurns, value); }
         }
 
         private int _maxTurns;
         public int MaxTurns
         {
             get { return _maxTurns; }
-            set
-            {
-                SetProperty(ref _maxTurns, value);
-                RaisePropertyChanged();
-            }
+            set { SetProperty(ref _maxTurns, value); }
         }
 
         private double _avgTurns;
         public double AvgTurns
         {
             get { return _avgTurns; }
-            set
-            {
-                SetProperty(ref _avgTurns, value);
-                RaisePropertyChanged();
-            }
+            set { SetProperty(ref _avgTurns, value); }
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs args)
@@ -100,7 +88,7 @@ namespace LcrSimulator
 
         private bool CanExecutePlayGame()
         {
-            return PlayersCount > 2 && GamesCount > 2;
+            return PlayersCount > LcrGame.MinPlayersCount - 1 && GamesCount > LcrGame.MinGamesCount - 1;
         }
 
         private async void PlayGameCommandHandlerAsync()
@@ -123,12 +111,13 @@ namespace LcrSimulator
 
         private void PlayGame()
         {
-            for (int i = 0; i < LcrGame.GamesCount; i++)
+            for (int i = 0; i < GamesCount; i++)
             {
-                var game = new Game(LcrGame.PlayersCount) { Index = i };
-                game.PlayGame();
+                var game = new Game(PlayersCount, LcrGame.InitialChipsCount);
                 LcrGame.Games.Add(game);
             }
+
+            LcrGame.Games.ForEach(o => o.PlayGame());
         }
         #endregion
 
@@ -179,9 +168,10 @@ namespace LcrSimulator
         private string GamesCountValidation()
         {
             string result = null;
+            var mgcnt = LcrGame.MinGamesCount;
 
-            if (GamesCount < 3)
-                result = "Please enter a valid GamesCount value at least 3";
+            if (GamesCount < mgcnt)
+                result = string.Format("Please enter a valid GamesCount value at least {0}", mgcnt);
 
             return result;
         }
@@ -189,9 +179,10 @@ namespace LcrSimulator
         private string PlayersCountValidation()
         {
             string result = null;
+            var mpcnt = LcrGame.MinPlayersCount;
 
-            if (PlayersCount < 3)
-                result = "Please enter a valid PlayersCount value at least 3";
+            if (PlayersCount < mpcnt)
+                result = string.Format("Please enter a valid PlayersCount value at least {0}", mpcnt);
 
             return result;
         }

@@ -17,6 +17,8 @@ namespace LcrSimulator
         public App()
         {
             Properties["Dices"] = new Dices();
+            Properties["Rand"] = new Random();  //new Random(Environment.TickCount)
+
             new MainWindow { DataContext = new MainWindowViewModel(new LcrGame()) }.Show();
         }
     }

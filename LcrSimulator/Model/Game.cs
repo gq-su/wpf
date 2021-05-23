@@ -14,14 +14,11 @@ namespace LcrSimulator.Model
             _players = new List<Player>();
         }
 
-        public Game(int playersCount) : this()
+        public Game(int playersCount, int initChipsCount) : this()
         {
             for (int i = 0; i < playersCount; i++)
             {
-                var player = new Player
-                {
-                    Index = i,
-                };
+                var player = new Player(initChipsCount) { Index = i };
 
                 player.PropertyChanged += Player_PropertyChanged;
 
@@ -50,7 +47,7 @@ namespace LcrSimulator.Model
                 _players.ForEach((player) =>
                 {
                     if (!GameOver)
-                        player.Play(Index + TurnsCount);
+                        player.Play();
                 });
 
             } while (!GameOver);

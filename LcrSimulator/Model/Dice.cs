@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Windows;
 
 namespace LcrSimulator.Model
 {
     public class Dice
     {
         public char[] DiceFaces { get; private set; } = new char[] { 'L', 'D', 'C', 'D', 'R', 'D' };
-
-        public int Index { get; set; }
 
         public char DiceFace { get; set; }
 
@@ -15,9 +14,9 @@ namespace LcrSimulator.Model
         /// </summary>
         public bool IsActive { get; set; }
 
-        public void Roll(int seed)
+        public void Roll()
         {
-            var rand = new Random(Environment.TickCount + seed + Index);
+            var rand = Application.Current.Properties["Rand"] as Random;
             DiceFace = DiceFaces[rand.Next(0, DiceFaces.Length)];
             IsActive = true;
         }

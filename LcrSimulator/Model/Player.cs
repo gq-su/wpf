@@ -1,9 +1,4 @@
 ﻿using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace LcrSimulator.Model
@@ -11,10 +6,11 @@ namespace LcrSimulator.Model
     public class Player : BindableBase
     {
         public readonly Dices Dices;
-        public Player()
+
+        public Player(int initChipsCount)
         {
             Dices = Application.Current.Properties["Dices"] as Dices;
-            _chipsCount = Dices.MaxDiceCount;
+            ChipsCount = initChipsCount;
         }
 
         public int Index { get; set; }
@@ -23,16 +19,10 @@ namespace LcrSimulator.Model
         public int ChipsCount
         {
             get { return _chipsCount; }
-            set
-            {
-                if (_chipsCount == value)
-                    return;
-
-                _chipsCount = value < 0 ? 0 : value;
-            }
+            set { _chipsCount = value < 0 ? 0 : value; }
         }
 
-        public void Play(int seed)
+        public void Play()
         {
             if (ChipsCount <= 0) return;
 
@@ -42,7 +32,7 @@ namespace LcrSimulator.Model
 
             for (int i = 0; i < playDiceCount; i++)
             {
-                Dices[i].Roll(Index + seed);
+                Dices[i].Roll();
             }
 
             RaisePropertyChanged("Played");
